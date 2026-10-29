@@ -1,0 +1,29 @@
+name: joplin
+summary: Joplin
+description: Note taking and to-do application with synchronisation for the Joplin desktop and mobile apps
+
+apps:
+  joplin:
+    user: joplin
+    command: bin/service.joplin.sh
+    daemon: simple
+    restart-condition: always
+    start-timeout: 600s
+    restart-delay: 10s
+
+  nginx:
+    user: joplin
+    command: bin/service.nginx.sh
+    daemon: simple
+    restart-condition: always
+    start-timeout: 600s
+    restart-delay: 10s
+
+  cli:
+    command: bin/cli
+
+  access-change:
+    command: bin/cli access-change
+
+  restore-pre-start:
+    command: bin/cli restore-pre-start
