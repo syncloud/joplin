@@ -1,12 +1,15 @@
 import { test, expect } from '../fixtures'
 import { shoot } from '../helpers/screenshot'
 import { env } from '../helpers/env'
-import { openApp, signIn } from '../helpers/joplin'
+import { openApp, signIn, signOut } from '../helpers/joplin'
+import { alicePassword } from '../helpers/users'
 import { connectApp, publishNote, syncFolder, syncNote } from '../helpers/app'
 import { journal, upgradeNote } from '../helpers/upgrade'
 
-test('admin syncs and publishes a note before the upgrade', async ({ page }) => {
+test('users sync and publish a note on the store version', async ({ page }) => {
   await openApp(page)
+  await signIn(page, 'alice', alicePassword)
+  await signOut(page)
   await signIn(page, env('PLAYWRIGHT_DEVICE_USER'), env('PLAYWRIGHT_DEVICE_PASSWORD'))
 
   await page.getByRole('link', { name: 'Users', exact: true }).click()
