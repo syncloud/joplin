@@ -1,13 +1,12 @@
 import { test, expect } from '../fixtures'
 import { shoot } from '../helpers/screenshot'
 import { env } from '../helpers/env'
-import { addUser } from '../helpers/users'
+import { addUser, alicePassword } from '../helpers/users'
 import { goHome, openApp, signIn, signOut } from '../helpers/joplin'
 import { connectApp, publishFolder, publishNote, syncFolder, syncNote } from '../helpers/app'
 
 const admin = env('PLAYWRIGHT_DEVICE_USER')
 const adminPassword = env('PLAYWRIGHT_DEVICE_PASSWORD')
-const password = 'Password1'
 
 const groceries = { id: 'a1000000000000000000000000000001', title: 'Groceries' }
 const shopping = {
@@ -24,7 +23,7 @@ const recipe = {
 }
 
 test('syncloud users sign in to joplin server through SSO', async ({ page }) => {
-  addUser('alice', password)
+  addUser('alice', alicePassword)
 
   await test.step('admin signs in and lands on the admin dashboard', async () => {
     await openApp(page)
@@ -47,7 +46,7 @@ test('syncloud users sign in to joplin server through SSO', async ({ page }) => 
 
   await test.step('a regular user is not an admin', async () => {
     await signOut(page)
-    await signIn(page, 'alice', password)
+    await signIn(page, 'alice', alicePassword)
     await expect(page.getByRole('heading', { name: 'Welcome to Joplin Server' })).toBeVisible()
     await expect(page.locator('.navbar').getByRole('link', { name: 'Admin', exact: true })).toBeHidden()
     await shoot(page, 'alice-home')

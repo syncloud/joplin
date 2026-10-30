@@ -87,6 +87,11 @@ local build(arch, test_ui) = [{
            commands: ['./test/e2e/run.sh specs/01-sso.spec.ts'],
          },
          {
+           name: 'test-upgrade-prev',
+           image: 'python:' + python,
+           commands: ['./ci/test.sh upgrade_prev.py ' + distro_default + ' ' + name],
+         },
+         {
            name: 'e2e-before-upgrade',
            image: playwright,
            commands: ['./test/e2e/run.sh specs/02-pre-upgrade.spec.ts'],

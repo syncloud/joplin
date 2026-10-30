@@ -86,13 +86,19 @@ def test_api_ping(app_domain):
     assert response.json()['status'] == 'ok'
 
 
-@pytest.mark.parametrize('path', ['/login', '/login/sso-oidc', '/login/sso-saml-app'])
+@pytest.mark.parametrize('path', ['/login', '/login/sso-oidc', '/login/sso-saml-app', '/api/saml'])
 def test_login_redirects_to_authelia(app_domain, domain, path):
     response = requests.get('https://{0}{1}'.format(app_domain, path), verify=False, allow_redirects=False)
     assert response.status_code == 302, response.text
     assert response.headers['Location'].startswith('https://auth.{0}/'.format(domain))
     assert 'scope=openid+profile+email+groups' in response.headers['Location']
     assert 'code_challenge_method=S256' in response.headers['Location']
+
+
+def test_app_sso_config_check_passes(app_domain, domain):
+    response = requests.get('https://{0}/api/saml'.format(app_domain), verify=False)
+    assert response.status_code == 200, response.text
+    assert response.url.startswith('https://auth.{0}/'.format(domain))
 
 
 def test_password_login_disabled(app_domain):
